@@ -14,10 +14,13 @@ package frc.robot.subsystems;
 
 import frc.robot.commands.*;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.RelativeEncoder;
@@ -58,8 +61,8 @@ public class SwerveModule{
 
     private double base_angle;
 
-    private double maxTurnSpeed = 0.3;
-    private double maxDriveSpeed = 0.4;
+    public static double maxTurnSpeed = 0.3;
+    public static final double maxDriveSpeed = 0.4;
     private double turnIntegratorRange = 0.01;
 
     private boolean enable_turn = true;
@@ -159,15 +162,11 @@ public class SwerveModule{
 
 
     private double clipAngle(double angle){ 
-        double out_angle = angle;
-        out_angle = 360.0*((out_angle/360.0) - Math.floor(out_angle/360.0));
-        return out_angle;
+        return angle % 360;
     }
 
     private double computeAdjustedAngle(double angle){ 
-        double out_angle =  base_angle+angle;
-        out_angle = 360.0*((out_angle/360.0) - Math.floor(out_angle/360.0));
-        return out_angle;
+        return (base_angle+angle) % 360;
     }
 
     public void simulationPeriodic() {
@@ -203,6 +202,13 @@ public class SwerveModule{
     public void setVelocity(double value) {
         drive_setpoint.setDouble(value);
 
+    }
+    
+    public void setStates(SwerveModuleState state){
+        state =
+        SwerveModuleState.optimize(state, new Rotation2d(cANCoder.getPosition() / 180 * Math.PI));
+        turn_setpoint.setDouble(clipAngle(state.angle.getDegrees()));
+        drive_setpoint.setDouble(state.speedMetersPerSecond);
     }
 
     public void getVelocity() {
