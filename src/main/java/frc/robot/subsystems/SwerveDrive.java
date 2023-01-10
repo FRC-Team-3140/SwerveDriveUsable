@@ -48,10 +48,10 @@ public class SwerveDrive extends SubsystemBase {
     // 6, 45.0 + 135);
     // private final SwerveModule m_swerveModule_bl = new SwerveModule("bl", 13, 7,
     // 8, 7.0 + 225);
-    private final SwerveModule m_swerveModule_fr = new SwerveModule("fr", 10, 1, 2, 285.0 + 45);
-    private final SwerveModule m_swerveModule_fl = new SwerveModule("fl", 11, 3, 4, 179.0 + 315);
-    private final SwerveModule m_swerveModule_br = new SwerveModule("br", 12, 5, 6, 30.0 + 135);
-    private final SwerveModule m_swerveModule_bl = new SwerveModule("bl", 13, 7, 8, 7.0 + 225);
+    private final SwerveModule m_swerveModule_fr = new SwerveModule("fr", 10, 1, 2, 285.0 + 45, 45);
+    private final SwerveModule m_swerveModule_fl = new SwerveModule("fl", 11, 3, 4, 179.0 + 315, -45);
+    private final SwerveModule m_swerveModule_br = new SwerveModule("br", 12, 5, 6, 30.0 + 135, -45);
+    private final SwerveModule m_swerveModule_bl = new SwerveModule("bl", 13, 7, 8, 7.0 + 225, 45);
 
     // Locations for the swerve drive modules relative to the robot center.
     //Other options: 0.381 and 0.4826
@@ -70,6 +70,8 @@ public class SwerveDrive extends SubsystemBase {
     final private NetworkTableEntry r_velocity;
 
     final private NetworkTableEntry drive_enabled;
+
+    public boolean locked = false;
 
     public SwerveDrive() {
         swerve_table = NetworkTableInstance.getDefault().getTable("swerve_chassis");
@@ -91,6 +93,9 @@ public class SwerveDrive extends SubsystemBase {
         r_velocity.setDouble(Math.abs(r_vel) < deadband ? 0 : r_vel);
     }
     
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
     
     @Override
     public void periodic() {
@@ -115,10 +120,10 @@ public class SwerveDrive extends SubsystemBase {
         
         if (drive_enabled.getBoolean(true)) {
             SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveModule.maxDriveSpeed);
-            m_swerveModule_fl.setStates(states[0]);
-            m_swerveModule_fr.setStates(states[1]);
-            m_swerveModule_bl.setStates(states[2]);
-            m_swerveModule_br.setStates(states[3]);
+            m_swerveModule_fl.setStates(states[0], locked);
+            m_swerveModule_fr.setStates(states[1], locked);
+            m_swerveModule_bl.setStates(states[2], locked);
+            m_swerveModule_br.setStates(states[3], locked);
             c3 = System.currentTimeMillis() / 1000.0;
 
             m_swerveModule_bl.periodic();

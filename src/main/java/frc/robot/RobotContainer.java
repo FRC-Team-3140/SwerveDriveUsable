@@ -52,6 +52,7 @@ public class RobotContainer {
   // SwerveModule("bl",13,7,8,187.0 + 225);
 
   public SwerveDrive swerveDrive = new SwerveDrive();
+  public boolean aDown = false;
 
   // Joysticks
 
@@ -120,6 +121,18 @@ public class RobotContainer {
         () -> {
           return -m_xbox_cotroller.getRightX();
         });
+    
+    new JoystickButton(m_xbox_cotroller, Button.kA.value)
+        .whenPressed(
+          () -> {
+            swerveDrive.setLocked(true);
+          }
+        )
+        .whenReleased(
+          () -> {
+            swerveDrive.setLocked(false);
+          }
+        );
 
     // This command schedules the drive_robot method
     // *** Makes the robot run *** 
