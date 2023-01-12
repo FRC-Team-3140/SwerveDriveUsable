@@ -57,13 +57,13 @@ public class TestDriveMotor extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_swerveModule.setVelocity(0.1);
+        m_swerveModule.setVelocity(0.1, false);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_swerveModule.setVelocity(0.0);
+        m_swerveModule.setVelocity(0.0, false);
     }
 
     // Returns true when the command should end.

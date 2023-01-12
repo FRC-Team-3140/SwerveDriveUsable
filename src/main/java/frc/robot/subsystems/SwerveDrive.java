@@ -1,10 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import javax.management.ConstructorParameters;
-
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,7 +7,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -67,7 +61,7 @@ public class SwerveDrive extends SubsystemBase {
         ChassisSpeeds fieldSpeeds = new ChassisSpeeds(dx, dy, rads_per_sec);
         m_gyro.zeroYaw();
         Rotation2d angle = new Rotation2d(m_gyro.getYaw());
-        ChassisSpeeds botSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(dx, dy, rads_per_sec, angle);
+        // ChassisSpeeds botSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(dx, dy, rads_per_sec, angle);
         System.out.println(angle);
         SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(fieldSpeeds);
         
@@ -77,11 +71,9 @@ public class SwerveDrive extends SubsystemBase {
             m_swerveModule_fr.setStates(states[1], locked);
             m_swerveModule_bl.setStates(states[2], locked);
             m_swerveModule_br.setStates(states[3], locked);
-            c3 = System.currentTimeMillis() / 1000.0;
 
             m_swerveModule_bl.periodic();
             m_swerveModule_br.periodic();
-            c4 = System.currentTimeMillis() / 1000.0;
             m_swerveModule_fl.periodic();
             m_swerveModule_fr.periodic();
         }
