@@ -208,7 +208,7 @@ public class SwerveModule{
     private void setTurnSpeed(double speed) {
         if (enable_turn) {
             // limit the speed
-            speed = Math.max(Math.min(speed, maxTurnSpeed), -maxTurnSpeed)
+            speed = Math.max(Math.min(speed, maxTurnSpeed), -maxTurnSpeed);
             turnSparkMax.set(speed);
         }
     }
@@ -216,7 +216,7 @@ public class SwerveModule{
     // Set the speed of this wheel (the speed will be limited to be in [-maxDriveSpeed, maxDriveSpeed])
     private void setDriveSpeed(double velocity) {
         if (enable_drive) {
-            velocity = Math.max(Math.min(velocity, maxDriveSpeed), -maxDriveSpeed)
+            velocity = Math.max(Math.min(velocity, maxDriveSpeed), -maxDriveSpeed);
             driveSparkMax.set(velocity);
         }
     }
